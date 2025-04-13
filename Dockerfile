@@ -29,13 +29,14 @@ RUN wget -q -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stabl
     apt-get update && apt-get install -y ./chrome.deb && \
     rm chrome.deb
 
-# Install ChromeDriver matching Chrome version
-RUN CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+') && \
-    wget -q -O chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROME_VERSION}/chromedriver_linux64.zip && \
+
+# Install ChromeDriver matching known version 135.0.7049.84
+RUN wget -q -O chromedriver.zip https://chromedriver.storage.googleapis.com/135.0.7049.84/chromedriver_linux64.zip && \
     unzip chromedriver.zip && \
     mv chromedriver /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver && \
     rm chromedriver.zip
+
 
 # Environment variables
 ENV CHROME_BIN=/usr/bin/google-chrome
