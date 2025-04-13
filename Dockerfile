@@ -22,15 +22,13 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils \
     ca-certificates \
+    chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome (manually)
-RUN wget -q -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get update && apt-get install -y ./chrome.deb && \
-    rm chrome.deb
-
-# Set environment variable for Chrome binary
-ENV CHROME_BIN="/usr/bin/google-chrome"
+# Set environment variable for Chromium
+ENV GOOGLE_CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
 
 # Python dependencies
 COPY requirements.txt .

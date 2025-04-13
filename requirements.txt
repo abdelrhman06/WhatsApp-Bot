@@ -1,6 +1,6 @@
 streamlit
-selenium
 pandas
 python-docx
-webdriver-manager
 openpyxl
+selenium
+webdriver-manager
