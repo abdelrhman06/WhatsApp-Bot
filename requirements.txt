@@ -3,3 +3,4 @@ selenium
 pandas
 python-docx
 webdriver-manager
+openpyxl
