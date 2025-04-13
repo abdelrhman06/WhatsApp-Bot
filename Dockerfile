@@ -1,11 +1,11 @@
 FROM python:3.10-slim
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     wget \
+    unzip \
     curl \
     gnupg \
-    unzip \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
@@ -23,27 +23,20 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     ca-certificates \
     chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
-# Install ChromeDriver matching known version 135.0.7049.84
-RUN wget -q https://chromedriver.storage.googleapis.com/135.0.7049.84/chromedriver_linux64.zip -O chromedriver.zip && \
-    unzip chromedriver.zip && \
-    mv chromedriver /usr/bin/chromedriver && \
-    chmod +x /usr/bin/chromedriver && \
-    rm chromedriver.zip
-
-# Set environment variables
-ENV CHROME_BIN="/usr/bin/chromium"
-ENV GOOGLE_CHROME_BIN="/usr/bin/chromium"
-ENV CHROMEDRIVER_PATH="/usr/bin/chromedriver"
+# Set environment variables for Chrome
+ENV GOOGLE_CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/lib/chromium/chromedriver
 
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app code
+# Copy the app
 COPY . /app
 WORKDIR /app
 
-# Run Streamlit app
+# Run the app
 CMD streamlit run app.py --server.port=$PORT --server.enableCORS=false
