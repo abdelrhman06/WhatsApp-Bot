@@ -1,12 +1,11 @@
 FROM python:3.10-slim
 
-# Install Chrome & dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
     gnupg \
     unzip \
-    xvfb \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
@@ -22,15 +21,18 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxrandr2 \
     xdg-utils \
-    chromium \
-    chromium-driver \
- && apt-get clean && rm -rf /var/lib/apt/lists/*
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set environment variable to avoid streamlit asking for CLI input
-ENV PYTHONUNBUFFERED=1
-ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+# Install Google Chrome (manually)
+RUN wget -q -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get update && apt-get install -y ./chrome.deb && \
+    rm chrome.deb
 
-# Copy requirements and install
+# Set environment variable for Chrome binary
+ENV CHROME_BIN="/usr/bin/google-chrome"
+
+# Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -38,5 +40,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 WORKDIR /app
 
-# Run Streamlit
+# Run app
 CMD streamlit run app.py --server.port=$PORT --server.enableCORS=false
