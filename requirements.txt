@@ -1,5 +1,5 @@
 streamlit
+selenium
 pandas
 python-docx
-selenium
 webdriver-manager

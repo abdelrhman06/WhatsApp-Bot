@@ -1,6 +1,6 @@
 FROM python:3.10-slim
 
-# Install Chrome
+# Install Chrome & dependencies
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
@@ -24,10 +24,13 @@ RUN apt-get update && apt-get install -y \
     xdg-utils \
     chromium \
     chromium-driver \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Set environment variable to avoid streamlit asking for CLI input
+ENV PYTHONUNBUFFERED=1
+ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -35,5 +38,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 WORKDIR /app
 
-# Run the Streamlit app
+# Run Streamlit
 CMD streamlit run app.py --server.port=$PORT --server.enableCORS=false
