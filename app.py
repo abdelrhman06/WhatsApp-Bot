@@ -20,8 +20,12 @@ chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
-
-
+chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--window-size=1920x1080")
+chrome_options.add_argument("--single-process")
+chrome_options.add_argument("--disable-dev-tools")
+chrome_options.add_argument("--no-zygote")
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN", "/usr/bin/google-chrome")
 
 st.set_page_config(page_title="📤 WhatsApp Bot", page_icon="💬")
 st.title("📤 WhatsApp Bot")
@@ -50,12 +54,6 @@ def clean_phone_number(raw_phone):
     return "20" + cleaned if cleaned.startswith("1") and len(cleaned) == 10 else None
 
 def send_whatsapp_message(phone_number, message):
-    chrome_options = Options()
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--user-data-dir=C:/whatsapp-session")
-    chrome_options.add_experimental_option("detach", True)
-
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     try:
         st.info("Opening WhatsApp Web...")
