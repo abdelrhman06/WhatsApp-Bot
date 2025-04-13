@@ -4,8 +4,8 @@ FROM python:3.10-slim
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
-    unzip \
     gnupg \
+    unzip \
     fonts-liberation \
     libappindicator3-1 \
     libasound2 \
@@ -22,25 +22,20 @@ RUN apt-get update && apt-get install -y \
     libxrandr2 \
     xdg-utils \
     ca-certificates \
+    chromium \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Google Chrome
-RUN wget -q -O chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt-get update && apt-get install -y ./chrome.deb && \
-    rm chrome.deb
-
-
 # Install ChromeDriver matching known version 135.0.7049.84
-RUN wget -q -O chromedriver.zip https://chromedriver.storage.googleapis.com/135.0.7049.84/chromedriver_linux64.zip && \
+RUN wget -q https://chromedriver.storage.googleapis.com/135.0.7049.84/chromedriver_linux64.zip -O chromedriver.zip && \
     unzip chromedriver.zip && \
     mv chromedriver /usr/bin/chromedriver && \
     chmod +x /usr/bin/chromedriver && \
     rm chromedriver.zip
 
-
-# Environment variables
-ENV CHROME_BIN=/usr/bin/google-chrome
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+# Set environment variables
+ENV CHROME_BIN="/usr/bin/chromium"
+ENV GOOGLE_CHROME_BIN="/usr/bin/chromium"
+ENV CHROMEDRIVER_PATH="/usr/bin/chromedriver"
 
 # Install Python dependencies
 COPY requirements.txt .
@@ -50,5 +45,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 WORKDIR /app
 
-# Run Streamlit
+# Run Streamlit app
 CMD streamlit run app.py --server.port=$PORT --server.enableCORS=false
