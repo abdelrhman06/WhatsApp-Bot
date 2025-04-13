@@ -14,6 +14,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import urllib.parse
+import os
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+
+
 
 st.set_page_config(page_title="📤 WhatsApp Bot", page_icon="💬")
 st.title("📤 WhatsApp Bot")
